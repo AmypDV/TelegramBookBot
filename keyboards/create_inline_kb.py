@@ -4,9 +4,7 @@ from lexicon.lexicon_ru import LEXICON
 
 
 # Функция для формирования инлайн-клавиатуры на лету
-def create_inline_kb(width: int,
-                     *args: str,
-                     **kwargs: str) -> InlineKeyboardMarkup:
+def create_inline_kb(width: int, *args: str) -> InlineKeyboardMarkup:
     # Инициализируем билдер
     kb_builder = InlineKeyboardBuilder()
     # Инициализируем список для кнопок
@@ -17,12 +15,8 @@ def create_inline_kb(width: int,
         for button in args:
             buttons.append(InlineKeyboardButton(
                 text=LEXICON.get(button, button),
-                callback_data=button))
-    if kwargs:
-        for button, text in kwargs.items():
-            buttons.append(InlineKeyboardButton(
-                text=text,
-                callback_data=button))
+                callback_data=button)
+            )
 
     # Распаковываем список с кнопками в билдер методом row c параметром width
     kb_builder.row(*buttons, width=width)
