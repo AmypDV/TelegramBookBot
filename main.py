@@ -12,7 +12,7 @@ from config_data.config import Config, load_config
 # Импортируем вспомогательные функции для создания нужных объектов
 # ...
 from keyboards.set_menu import set_main_menu
-from lexicon.lexicon_ru import LEXICON_RU
+from lexicon.lexicon_ru import LEXICON
 from datebase import datebase
 
 
