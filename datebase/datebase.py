@@ -1,13 +1,13 @@
 import pickle
-
+from dataclasses import dataclass, field
 
 _BD = 'bd.pickle'
 
-# Создаем шаблон заполнения словаря с пользователями
-user_dict_template = {
-    'page': 1,
-    'bookmarks': set()
-}
+
+@dataclass
+class UserBD:
+    page: int = 1
+    bookmarks: set[int] = field(default_factory=set)
 
 
 def write_to_bd(dir: str) -> None:
@@ -22,4 +22,4 @@ def read_from_db(dir: str) -> set[dict]:
 
 
 # Инициализируем "базу данных"
-users_db = read_from_db(_BD)
+users_db: set[UserBD] = read_from_db(_BD)
