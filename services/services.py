@@ -1,4 +1,10 @@
+import os
+import sys
 
+BOOK: dict[int, str] = {}
+
+BOOK_PATH = 'book/book.txt'
+PAGE_SIZE = 1050
 def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
     sep = ',.!:;?'
     new_text = text[start:start+page_size]
@@ -11,13 +17,8 @@ def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
         return new_text, len(new_text)
 
 
-
-BOOK: dict[int, str] = {}
-PAGE_SIZE = 1050
-
-
-
 def prepare_book(path: str) -> None:
+    print(path)
     with open(path, 'r', encoding='utf-8') as file:
         text = file.read()
     start, n_page = 0, 0
@@ -28,4 +29,6 @@ def prepare_book(path: str) -> None:
         start += len_page
         BOOK[n_page] = text_page.lstrip()
 
-prepare_book('book.book.txt')
+
+
+prepare_book(os.path.join(sys.path[0], os.path.normpath(BOOK_PATH)))
