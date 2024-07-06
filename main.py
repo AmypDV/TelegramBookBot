@@ -13,16 +13,12 @@ from config_data.config import Config, load_config
 # ...
 from keyboards.set_menu import set_main_menu
 from lexicon.lexicon_ru import LEXICON_RU
-from middlewares.i18n import TranslatorMiddleware
+from datebase import datebase
+
 
 # Инициализируем логгер
 logger = logging.getLogger(__name__)
 
-translations = {
-    'default': 'ru',
-    'en': LEXICON_EN,
-    'ru': LEXICON_RU,
-}
 
 # Функция конфигурирования и запуска бота
 async def main():
@@ -39,20 +35,17 @@ async def main():
     config: Config = load_config()
 
     # Инициализируем объект хранилища
-    storage = ...
+    users_db = datebase.users_db
 
     # Инициализируем бот и диспетчер
     bot = Bot(
         token=config.tg_bot.token,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML)
     )
-    dp = Dispatcher(storage=storage)
-
-    # Инициализируем другие объекты (пул соединений с БД, кеш и т.п.)
-    # ...
+    dp = Dispatcher()
 
     # Помещаем нужные объекты в workflow_data диспетчера
-    dp.workflow_data.update(...)
+    dp.workflow_data.update(users_db=users_db)
 
     # Настраиваем главное меню бота
     await set_main_menu(bot)
@@ -61,14 +54,10 @@ async def main():
     logger.info('Подключаем роутеры')
     # ...
 
-    # Регистрируем миддлвари
-    logger.info('Подключаем миддлвари')
-    dp.update.middleware(TranslatorMiddleware())
-    # ...
 
     # Пропускаем накопившиеся апдейты и запускаем polling
     await bot.delete_webhook(drop_pending_updates=True)
-    await dp.start_polling(bot, _translations=translations)
+    await dp.start_polling(bot)
 
 
 asyncio.run(main())
