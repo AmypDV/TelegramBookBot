@@ -33,7 +33,7 @@ def create_bookmarks_kb(*args: int) -> InlineKeyboardMarkup:
         ),
         InlineKeyboardButton(
             text=LEXICON['cancel'],
-            callback_data='cancel'
+            callback_data='cancel_bookmarks'
         )
     )
 
@@ -49,7 +49,7 @@ def change_bookmarks_kb(*args: int) -> InlineKeyboardMarkup:
 
     # Заполняем список кнопками из аргументов args и kwargs
     if args:
-        for button in args:
+        for button in sorted(args):
             buttons.append(
                 InlineKeyboardButton(
                     text=f'{LEXICON.get("del")}{button} - {BOOK[button][:100]}',
@@ -64,7 +64,7 @@ def change_bookmarks_kb(*args: int) -> InlineKeyboardMarkup:
     kb_builder.row(
         InlineKeyboardButton(
             text=LEXICON['cancel'],
-            callback_data='cancel'
+            callback_data='cancel_edit_bookmarks'
         )
     )
 
