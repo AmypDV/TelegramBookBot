@@ -4,7 +4,7 @@ from lexicon.lexicon_ru import LEXICON
 
 
 # Функция для формирования инлайн-клавиатуры на лету
-def create_inline_kb(*args: str) -> InlineKeyboardMarkup:
+def create_pagination_kb(*args: str) -> InlineKeyboardMarkup:
     # Инициализируем билдер
     kb_builder = InlineKeyboardBuilder()
     # Инициализируем список для кнопок
