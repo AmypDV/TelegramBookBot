@@ -1,18 +1,16 @@
 import asyncio
 import logging
+import sys
 
 from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 from config_data.config import Config, load_config
 # Импортируем роутеры
-# ...
-# Импортируем миддлвари
-# ...
-# Импортируем вспомогательные функции для создания нужных объектов
-# ...
+from handlers.user_handlers import user_router
+from handlers.other_handlers import other_router
+
 from keyboards.set_menu import set_main_menu
-from lexicon.lexicon_ru import LEXICON
 from datebase import datebase
 
 
@@ -26,7 +24,10 @@ async def main():
     logging.basicConfig(
         level=logging.INFO,
         format='%(filename)s:%(lineno)d #%(levelname)-8s '
-               '[%(asctime)s] - %(name)s - %(message)s')
+               '[%(asctime)s] - %(name)s - %(message)s',
+        handlers=[logging.StreamHandler(sys.stdout)]
+    )
+
 
     # Выводим в консоль информацию о начале запуска бота
     logger.info('Starting bot')
@@ -35,7 +36,7 @@ async def main():
     config: Config = load_config()
 
     # Инициализируем объект хранилища
-    users_db = datebase.users_db
+    users_bd = datebase.users_bd
 
     # Инициализируем бот и диспетчер
     bot = Bot(
@@ -44,15 +45,12 @@ async def main():
     )
     dp = Dispatcher()
 
-    # Помещаем нужные объекты в workflow_data диспетчера
-    dp.workflow_data.update(users_db=users_db)
-
     # Настраиваем главное меню бота
     await set_main_menu(bot)
 
     # Регистриуем роутеры
     logger.info('Подключаем роутеры')
-    # ...
+    dp.include_routers(user_router, other_router)
 
 
     # Пропускаем накопившиеся апдейты и запускаем polling
