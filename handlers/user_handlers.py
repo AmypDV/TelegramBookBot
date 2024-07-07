@@ -57,16 +57,21 @@ async def get_command_help(message: Message):
 async def get_command_help(message: Message):
     user_id = message.from_user.id
     bookmarks = users_bd[user_id].bookmarks
-    await message.answer(
-        text=LEXICON['/bookmarks'],
-        reply_markup=create_bookmarks_kb(*bookmarks)
-    )
+    if bookmarks:
+        await message.answer(
+            text=LEXICON['/bookmarks'],
+            reply_markup=create_bookmarks_kb(*bookmarks)
+        )
+    else:
+        await message.answer(
+            text=LEXICON['no_bookmarks']
+        )
 
 @user_router.callback_query(F.data == 'edit_bookmarks')
 async def change_bookmarks(callback:CallbackQuery):
     user_id = callback.from_user.id
     bookmarks = users_bd[user_id].bookmarks
-    await callback.message.answer(
+    await callback.message.edit_text(
         text=LEXICON['edit_bookmarks'],
         reply_markup=change_bookmarks_kb(*bookmarks)
     )
@@ -107,7 +112,7 @@ async def get_callback_backward(callback: CallbackQuery):
             )
         )
 
-@user_router.callback_query(lambda x: '/' in x.data and x.data.replace('/', '').isdigit())
+@user_router.callback_query(IsBookmarksCallbackData())
 async def get_callback_backward(callback: CallbackQuery):
     user_id = callback.from_user.id
     page = users_bd[user_id].page
@@ -123,7 +128,7 @@ async def open_bookmarks(callback: CallbackQuery):
     user_id = callback.from_user.id
     users_bd[user_id].page = int(page)
     write_to_bd()
-    await callback.message.answer(
+    await callback.message.edit_text(
         text=BOOK[int(page)],
         reply_markup=create_pagination_kb(
                 'forward',
@@ -139,7 +144,35 @@ async def open_bookmarks(callback: CallbackQuery):
     user_id = callback.from_user.id
     users_bd[user_id].bookmarks.remove(page)
     write_to_bd()
-    await callback.message.answer(
-        text=LEXICON['edit_bookmarks'],
-        reply_markup=change_bookmarks_kb(*users_bd[user_id].bookmarks)
+    if users_bd[user_id].bookmarks:
+        await callback.message.edit_text(
+            text=LEXICON['edit_bookmarks'],
+            reply_markup=change_bookmarks_kb(*users_bd[user_id].bookmarks)
+        )
+    else:
+        await callback.message.edit_text(
+            text=LEXICON['no_bookmarks']
+        )
+
+@user_router.callback_query(F.data == 'cancel_bookmarks')
+async def get_cansel_bookmarks_command(callback: CallbackQuery):
+    user_id = callback.from_user.id
+    page = users_bd[user_id].page
+    text = BOOK[page]
+    await callback.message.edit_text(
+        text=text,
+        reply_markup=create_pagination_kb(
+            'forward',
+            f'{page}/{len(BOOK)}',
+            'backward',
+        )
+    )
+
+@user_router.callback_query(F.data == 'cancel_edit_bookmarks')
+async def get_cansel_edit_bookmarks(callback: CallbackQuery):
+    user_id = callback.from_user.id
+    bookmarks = users_bd[user_id].bookmarks
+    await callback.message.edit_text(
+        text=LEXICON['/bookmarks'],
+        reply_markup=create_bookmarks_kb(*bookmarks)
     )
