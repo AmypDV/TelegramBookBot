@@ -1,10 +1,13 @@
 import os
 import sys
+import logging
+
+logger = logging.getLogger(__name__)
 
 BOOK: dict[int, str] = {}
 
 BOOK_PATH = 'book/book.txt'
-PAGE_SIZE = 1050
+PAGE_SIZE = 1000
 def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
     sep = ',.!:;?'
     new_text = text[start:start+page_size]
@@ -18,7 +21,6 @@ def _get_part_text(text: str, start: int, page_size: int) -> tuple[str, int]:
 
 
 def prepare_book(path: str) -> None:
-    print(path)
     with open(path, 'r', encoding='utf-8') as file:
         text = file.read()
     start, n_page = 0, 0
@@ -28,6 +30,7 @@ def prepare_book(path: str) -> None:
         text_page, len_page = _get_part_text(text, start, PAGE_SIZE)
         start += len_page
         BOOK[n_page] = text_page.lstrip()
+    logger.info('Книга подготовлена')
 
 
 
