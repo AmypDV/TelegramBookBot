@@ -93,6 +93,8 @@ async def get_callback_forward(callback: CallbackQuery):
                 'backward',
             )
         )
+    else:
+        await callback.answer()
 
 
 @user_router.callback_query(F.data == 'backward')
@@ -111,6 +113,8 @@ async def get_callback_backward(callback: CallbackQuery):
                 'backward',
             )
         )
+    else:
+        await callback.answer()
 
 @user_router.callback_query(IsBookmarksCallbackData())
 async def get_callback_backward(callback: CallbackQuery):
