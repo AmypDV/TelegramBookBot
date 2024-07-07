@@ -53,7 +53,7 @@ def change_bookmarks_kb(*args: int) -> InlineKeyboardMarkup:
             buttons.append(
                 InlineKeyboardButton(
                     text=f'{LEXICON.get("del")}{button} - {BOOK[button][:100]}',
-                    callback_data=str(button)
+                    callback_data=f'{str(button)}del'
                 )
             )
 
