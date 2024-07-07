@@ -13,6 +13,7 @@ LEXICON: dict[str, str] = {
     '/bookmarks': '<b>Это список ваших закладок:</b>',
     'edit_bookmarks': '<b>Редактировать закладки</b>',
     'edit_bookmarks_button': '❌ РЕДАКТИРОВАТЬ',
+    'add_bookmarks': 'Теперь эта страница в закладках',
     'del': '❌',
     'cancel': 'ОТМЕНИТЬ',
     'no_bookmarks': 'У вас пока нет ни одной закладки.\n\nЧтобы '
