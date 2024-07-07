@@ -1,15 +1,16 @@
 from aiogram.filters import BaseFilter
 from aiogram.types import CallbackQuery
+import re
 
 class IsDigitCallbackData(BaseFilter):
-    # def __init__(self, callback):
-    #     self.callback = callback
-
     async def __call__(self, callback: CallbackQuery):
         return callback.data.isdigit()
 
 
 class IsDelBookmarkCallbackData(BaseFilter):
-    # def __init__(self, ca):
-    def __call__(self, callback: CallbackQuery):
+    async def __call__(self, callback: CallbackQuery):
         return callback.data.endswith('del') and callback.data[:-3].isdigit()
+
+class IsBookmarksCallbackData(BaseFilter):
+    async def __call__(self, callback: CallbackQuery):
+        return bool(re.fullmatch(r'\d+/\d+', callback.data))
